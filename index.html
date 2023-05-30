@@ -1,6 +1,3 @@
-
-
-
 <html>
 <head>
 
@@ -19,6 +16,7 @@
 	<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 
 <style>
+
 	
   /* Dark Mode Styles */
   body.dark-mode,
@@ -46,9 +44,8 @@ body.dark-mode .tooltip {
     color: #000; /* Specify the desired text color for dark mode */
 background-color : #999
   }
-
 	
-	 body.dark-mode	  #search-bar::placeholder {
+ body.dark-mode	  #search-bar::placeholder {
     color: #fff; /* Specify the desired color for the placeholder text */
   }
 
@@ -113,7 +110,7 @@ body.dark-mode .button-8:focus {
  .dark-mode-toggle {
     position: absolute;
     top: 716.5px;
-    left: 630px;
+    left: 684.5px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -496,8 +493,42 @@ width: 120px;
 #search-bar {
     position: absolute;
     top: 726px; /* Adjust the desired top position */
-    left: 730px; /* Adjust the desired left position */
+    left: 760px; /* Adjust the desired left position */
   }
+
+
+.toggle-button {
+  background-color: #f5f5f5;
+  color: #333;
+  padding: 7px 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+position: absolute;
+top: 717px;
+left: 611px;
+}
+
+.toggle-button:hover {
+  background-color: #eaeaea;
+}
+
+.toggle-button:focus {
+  outline: none;
+}
+
+.toggle-button:active {
+  background-color: #ccc;
+}
+
+
+
+.icon::before {
+  content: "\f2b5";
+  font-family: "Ionicons"; /* Replace with the appropriate font */
+font-size: 22px;
+}
+
 
 </style>
 	
@@ -519,8 +550,9 @@ width: 120px;
   </div>
 <svg id="scatter-plot"></svg>
 <input type="text" id="search-bar" placeholder="Search player...">
+<button id="toggle-median-lines" class="toggle-button"><div class="icon"></div></button>
 <script>
-  var csvData = `ID,Player,Minutes played,Duels per 90,Duels won %,Successful defensive actions per 90,Defensive duels per 90,Defensive duels won %,Aerial duels per 90,Aerial duels won %,PAdj Sliding tackles,Shots blocked per 90,PAdj Interceptions,Fouls per 90,Yellow cards per 90,Successful attacking actions per 90,Non-penalty goals per 90,xG per 90,Shots per 90,Shots on target %,Assists per 90,Crosses per 90,Accurate crosses %,Dribbles per 90,Successful dribbles %,Offensive duels per 90,Offensive duels won %,Touches in box per 90,Progressive runs per 90,Accelerations per 90,Received passes per 90,Received long passes per 90,Fouls suffered per 90,Passes per 90,Accurate passes %,Forward passes per 90,Accurate forward passes %,Short / medium passes per 90,Accurate short / medium passes %,Long passes per 90,Accurate long passes %,Average pass length m,xA per 90,Shot assists per 90,Second assists per 90,Third assists per 90,Smart passes per 90,Accurate smart passes %,Key passes per 90,Passes to final third per 90,Accurate passes to final third %,Passes to penalty area per 90,Accurate passes to penalty area %,Through passes per 90,Accurate through passes %,Deep completions per 90,Deep completed crosses per 90,Progressive passes per 90,Accurate progressive passes %
+   var csvData = `ID,Player,Minutes played,Duels per 90,Duels won %,Successful defensive actions per 90,Defensive duels per 90,Defensive duels won %,Aerial duels per 90,Aerial duels won %,PAdj Sliding tackles,Shots blocked per 90,PAdj Interceptions,Fouls per 90,Yellow cards per 90,Successful attacking actions per 90,Non-penalty goals per 90,xG per 90,Shots per 90,Shots on target %,Assists per 90,Crosses per 90,Accurate crosses %,Dribbles per 90,Successful dribbles %,Offensive duels per 90,Offensive duels won %,Touches in box per 90,Progressive runs per 90,Accelerations per 90,Received passes per 90,Received long passes per 90,Fouls suffered per 90,Passes per 90,Accurate passes %,Forward passes per 90,Accurate forward passes %,Short / medium passes per 90,Accurate short / medium passes %,Long passes per 90,Accurate long passes %,Average pass length m,xA per 90,Shot assists per 90,Second assists per 90,Third assists per 90,Smart passes per 90,Accurate smart passes %,Key passes per 90,Passes to final third per 90,Accurate passes to final third %,Passes to penalty area per 90,Accurate passes to penalty area %,Through passes per 90,Accurate through passes %,Deep completions per 90,Deep completed crosses per 90,Progressive passes per 90,Accurate progressive passes %
 1,R. James,2414,19.39,53.08,7.83,6.6,64.41,2.65,50.7,0.35,0.11,5.18,1.12,0.26,3.91,0.07,0.06,1.04,35.71,0.11,4.03,35.19,2.83,68.42,7.2,46.11,1.86,1.79,0.41,43.73,3.54,0.97,54.81,87.69,13.5,81.77,48.28,93.36,2.83,61.84,17.99,0.16,1.01,0.04,0.07,0.37,50,0.6,5,76.87,3.73,55,0.45,41.67,1.12,1.3,8.54,83.41
 2,A. Hakimi,3555,17.16,54.72,8.68,7.54,66.44,1.24,46.94,0.1,0.05,4.59,1.04,0.18,2.94,0.1,0.06,0.61,45.83,0.15,2.03,33.75,3.14,55.65,6.51,45.53,2.66,2.33,0.84,43.22,2.96,0.81,52.68,88.61,12.43,85.34,49.29,91.94,1.49,52.54,15.03,0.15,1.04,0.03,0.05,0.35,64.29,0.56,3.06,79.34,2.23,62.5,0.43,52.94,1.29,0.66,5.7,78.67
 3,A. Davies,3469,20.78,50.06,8.9,5.81,66.96,0.99,42.11,0.28,0.21,7.34,0.47,0.05,4.46,0.1,0.11,0.86,48.48,0.16,1.4,31.48,6.69,51.94,11.67,43.78,3.06,3.79,2.21,38.76,1.53,0.96,52.2,86.18,13.7,73.67,48.62,89.7,2.23,41.86,16.75,0.15,1.48,0.08,0.08,0.57,22.73,0.7,4.85,73.8,2.46,54.74,0.86,15.15,2.18,0.47,7.13,73.82
@@ -979,12 +1011,13 @@ width: 120px;
   var width = 1080 - margin.left - margin.right;
   var height = 720 - margin.top - margin.bottom;
 
-// select the container element and set its position to relative
+var medianLinesVisible = false;
+
+
 var container = d3.select("body")
   .append("div")
   .style("position", "relative");
 
-// create the first select element and position it to the left of the container
 var selectX = container.append("select")
   .attr("id", "select-x")
   .on("change", updateChart)
@@ -992,13 +1025,18 @@ var selectX = container.append("select")
   .style("left", "80px")
   .style("top", "0px");
 
-// create the second select element and position it to the right of the container
 var selectY = container.append("select")
   .attr("id", "select-y")
   .on("change", updateChart)
   .style("position", "absolute")
   .style("left", "330px")
   .style("top", "0px");
+
+
+var xMedian = d3.median(data, function(d) { return d[header.indexOf(xMetric)]; });
+var yMedian = d3.median(data, function(d) { return d[header.indexOf(yMetric)]; });
+
+
 
 
   header.slice(2).forEach(function(metric) {
@@ -1090,9 +1128,7 @@ tooltip.style("position", "absolute")
   .style("font-size", "12px");
 	
 	document.addEventListener('touchstart', function(event) {
-  // Check if the touch event target is the tooltip or one of its child elements
   if (!tooltip.contains(event.target)) {
-    // Hide the tooltip if the touch event target is not the tooltip or one of its child elements
     tooltip.style.display = 'none';
   }
 });
@@ -1199,6 +1235,29 @@ svg.append("text")
 
 
 
+// X-axis median line
+var xMedianLine = svg.append("line")
+  .attr("class", "x-median")
+  .attr("x1", xScale(xMedian))
+  .attr("y1", 0)
+  .attr("x2", xScale(xMedian))
+  .attr("y2", height)
+  .style("stroke", "red")
+  .style("stroke-dasharray", "4")
+  .style("display", medianLinesVisible ? "block" : "none");
+
+// Y-axis median line
+var yMedianLine = svg.append("line")
+  .attr("class", "y-median")
+  .attr("x1", 0)
+  .attr("y1", yScale(yMedian))
+  .attr("x2", width)
+  .attr("y2", yScale(yMedian))
+  .style("stroke", "red")
+  .style("stroke-dasharray", "4")
+  .style("display", medianLinesVisible ? "block" : "none");
+
+
 
 
 function updateChart() {
@@ -1209,6 +1268,37 @@ function updateChart() {
 
 xScale.domain(d3.extent(data, function(d) { return d[header.indexOf(xMetric)]; })).nice();
 yScale.domain(d3.extent(data, function(d) { return d[header.indexOf(yMetric)]; })).nice();
+ 
+// Remove existing median lines
+svg.selectAll(".median-line").remove();
+
+// Create new median lines
+if (medianLinesVisible) {
+  // Calculate the new medians based on the selected metrics
+  var xMedian = d3.median(data, function(d) { return d[header.indexOf(xMetric)]; });
+  var yMedian = d3.median(data, function(d) { return d[header.indexOf(yMetric)]; });
+
+  // X-axis median line
+  svg.append("line")
+    .attr("class", "median-line")
+    .attr("x1", xScale(xMedian))
+    .attr("y1", 0)
+    .attr("x2", xScale(xMedian))
+    .attr("y2", height)
+    .style("stroke", "red")
+    .style("stroke-dasharray", "4");
+
+  // Y-axis median line
+  svg.append("line")
+    .attr("class", "median-line")
+    .attr("x1", 0)
+    .attr("y1", yScale(yMedian))
+    .attr("x2", width)
+    .attr("y2", yScale(yMedian))
+    .style("stroke", "red")
+    .style("stroke-dasharray", "4");
+}
+
 
 
   svg.select(".x-label")
@@ -1231,6 +1321,20 @@ yScale.domain(d3.extent(data, function(d) { return d[header.indexOf(yMetric)]; }
     .transition()
     .duration(1000)
     .call(d3.axisLeft(yScale).tickSize(0));
+
+  svg.select(".x-median")
+    .transition()
+    .duration(1000)
+    .attr("x1", xScale(xMedian))
+    .attr("x2", xScale(xMedian));
+
+  svg.select(".y-median")
+    .transition()
+    .duration(1000)
+    .attr("y1", yScale(yMedian))
+    .attr("y2", yScale(yMedian));
+
+
 }
 
 
@@ -1240,28 +1344,46 @@ function resetSearch() {
 }
 
 
+
+function resetMedianLines() {
+  svg.selectAll(".median-line").remove();
+}
+
+
+var toggleButton = document.getElementById("toggle-median-lines");
+toggleButton.addEventListener("click", function() {
+  medianLinesVisible = !medianLinesVisible; // toggle the visibility state
+
+  if (medianLinesVisible) {
+    updateChart();
+  } else {
+    svg.selectAll(".median-line").remove(); // Remove existing median lines
+  }
+});
+
+
+
 </script>
 
 <a href="https://datamb.football/plots/" target="_blank" rel="noopener noreferrer">
   <button class="button-1" role="button">Home</button>
-<a href="https://datamb.football/plotgk/" target="_blank" rel="noopener noreferrer">
+<a href="https://datamb.football/gkpl/" target="_blank" rel="noopener noreferrer">
   <button class="button-2" role="button">Goalkeepers</button>
-<a href="https://datamb.football/plotcb/" target="_blank" rel="noopener noreferrer">
+<a href="https://datamb.football/plcb/" target="_blank" rel="noopener noreferrer">
   <button class="button-3" role="button">Centrebacks</button>
-<a href="https://datamb.football/plotfb/" target="_blank" rel="noopener noreferrer">
+<a href="https://datamb.football/plfb/" target="_blank" rel="noopener noreferrer">
   <button class="button-4" role="button">Fullbacks</button>
-<a href="https://datamb.football/plotcm/" target="_blank" rel="noopener noreferrer">
+<a href="https://datamb.football/plcm/" target="_blank" rel="noopener noreferrer">
   <button class="button-5" role="button">Midfielders</button>
-<a href="https://datamb.football/plotfw/" target="_blank" rel="noopener noreferrer">
+<a href="https://datamb.football/plfw/" target="_blank" rel="noopener noreferrer">
   <button class="button-6" role="button">Wingers</button>
-<a href="https://datamb.football/plotst/" target="_blank" rel="noopener noreferrer">
+<a href="https://datamb.football/plst/" target="_blank" rel="noopener noreferrer">
   <button class="button-7" role="button">Strikers</button>
 	<a href="https://datamb.football/radars/" target="_blank" rel="noopener noreferrer">
   <button class="button-9" role="button">Radars</button>
 <a href="https://twitter.com/DataMB_" target="_blank" rel="noopener noreferrer">
   <button class="button-8" role="button">@DataMB_</button>
 </a>
-
 <script>
 
     // Function to toggle dark mode
@@ -1286,3 +1408,4 @@ function resetSearch() {
 
 </body>
 </html>
+
